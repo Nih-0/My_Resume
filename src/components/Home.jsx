@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion';
 import Typewriter from 'typewriter-effect';
+import { Link } from 'react-router-dom';
 import '../styles/Home.css';
 
 const Home = () => {
@@ -47,7 +48,7 @@ const Home = () => {
           animate={{ opacity: 1 }}
           transition={{ delay: 1.5, duration: 1 }}
         >
-          <a href={import.meta.env.BASE_URL + "Contact"} className="btn primary">Contact Me</a>
+           <Link to="/contact" className="btn primary">Contact Me</Link>
           <a href="/assets/Resume.pdf" download className="btn secondary">Download Resume</a>
         </motion.div>
       </div>
