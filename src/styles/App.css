@@ -5,23 +5,6 @@
   box-sizing: border-box;
 }
 
-:root {
-  --bg-color: #007BFF; /* Blue background */
-  --text-primary: #ffffff; /* White text */
-  --accent-color: #ffffff; /* White for accent */
-}
-
-[data-theme='light'] {
-  --bg-color: #007BFF; /* Blue background for light theme */
-  --text-primary: #ffffff; /* White text for light theme */
-  --accent-color: #ffffff; /* White for accent */
-}
-
-[data-theme='dark'] {
-  --bg-color: #007BFF; /* Blue background for dark theme */
-  --text-primary: #ffffff; /* White text for dark theme */
-  --accent-color: #ffffff;
-
 /* ===== Root Elements ===== */
 html {
   scroll-behavior: smooth;
