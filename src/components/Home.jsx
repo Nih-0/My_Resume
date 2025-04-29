@@ -47,7 +47,7 @@ const Home = () => {
           animate={{ opacity: 1 }}
           transition={{ delay: 1.5, duration: 1 }}
         >
-          <a href="/Contact" className="btn primary">Contact Me</a>
+          <a href={import.meta.env.BASE_URL + "Contact"} className="btn primary">Contact Me</a>
           <a href="/assets/Resume.pdf" download className="btn secondary">Download Resume</a>
         </motion.div>
       </div>
