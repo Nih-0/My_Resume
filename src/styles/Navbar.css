@@ -61,11 +61,11 @@
   [data-theme='dark'] {
     --nav-bg: #1a1a1a;
     --text-primary: #ffffff;
-    --accent-color: #ff4d4d;
+    --accent-color: #646cff;
   }
   
   [data-theme='light'] {
     --nav-bg: #ffffff;
     --text-primary: #333333;
-    --accent-color: #ff4d4d;
+    --accent-color: #646cff;
   }
