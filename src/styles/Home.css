@@ -1,0 +1,73 @@
+.home-container {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--bg-color);
+    color: var(--text-primary);
+    padding: 2rem;
+    text-align: center;
+  }
+  
+  .home-content {
+    max-width: 800px;
+  }
+  
+  .highlight {
+    color: var(--accent-color);
+  }
+  
+  .home-content h1 {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+  }
+  
+  .typewriter {
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+    min-height: 2rem;
+  }
+  
+  .home-buttons {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+  }
+  
+  .btn {
+    padding: 0.8rem 1.5rem;
+    border-radius: 5px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.3s ease;
+  }
+  
+  .primary {
+    background-color: var(--accent-color);
+    color: white;
+  }
+  
+  .primary:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(255, 77, 77, 0.3);
+  }
+  
+  .secondary {
+    border: 2px solid var(--accent-color);
+    color: var(--accent-color);
+  }
+  
+  .secondary:hover {
+    background-color: var(--accent-color);
+    color: white;
+    transform: translateY(-3px);
+  }
+  
+  /* Add these to your existing theme variables */
+  [data-theme='dark'] {
+    --bg-color: #121212;
+  }
+  
+  [data-theme='light'] {
+    --bg-color: #f5f5f5;
+  }

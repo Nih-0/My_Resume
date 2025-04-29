@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Primary Meta Tags -->
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="theme-color" content="#121212" />
+  <title>Nihal Yadav | Full Stack Developer</title>
+  <meta name="description" content="Portfolio of Nihal Yadav - Java and Full Stack Developer with expertise in Spring Boot, React, and database systems">
+  <meta name="keywords" content="portfolio, java developer, full stack, spring boot, react, nihal yadav">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+  
+  <!-- iOS PWA Config -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Nihal's Portfolio">
+  
+  <!-- Android PWA Config -->
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="application-name" content="Nihal's Portfolio">
+  
+  <!-- Preconnect for external resources -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  
+  <!-- Preload critical CSS -->
+  <link rel="preload" href="/src/styles/App.css" as="style">
+  
+  <!-- Social Media Meta -->
+  <meta property="og:title" content="Nihal Yadav | Full Stack Developer">
+  <meta property="og:description" content="Portfolio showcasing Java and Full Stack development projects">
+  <meta property="og:type" content="website">
+</head>
+<body style="margin:0;padding:0;overflow-x:hidden;background-color:#121212;position:relative;min-height:100vh;min-height:-webkit-fill-available;">
+  <!-- Root React Mount -->
+  <div id="root"></div>
+  
+  <!-- Scripts -->
+  <script type="module" src="/src/main.jsx"></script>
+  
+  <!-- Mobile Viewport Fix -->
+  <script>
+    document.documentElement.style.setProperty(
+      '--mobile-height',
+      `${window.innerHeight}px`
+    );
+    
+    window.addEventListener('resize', () => {
+      document.documentElement.style.setProperty(
+        '--mobile-height',
+        `${window.innerHeight}px`
+      );
+    });
+    
+    // Prevent zooming on input focus
+    document.addEventListener('touchstart', function(e) {
+      if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.tagName === 'SELECT') {
+        e.target.style.fontSize = '16px';
+      }
+    }, { passive: true });
+  </script>
+</body>
+</html>

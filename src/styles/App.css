@@ -1,0 +1,100 @@
+/* ===== Global Reset ===== */
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* ===== Root Elements ===== */
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  min-height: 100vh;
+  background-color: var(--bg-color);
+  color: var(--text-primary);
+  line-height: 1.6;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  overflow-x: hidden;
+}
+
+/* ===== Layout Structure ===== */
+#root {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  /* Remove max-width and centered margin for full bleed */
+  width: 100%;
+  padding: 0;
+}
+
+/* ===== Navbar Fixes ===== */
+.navbar {
+  width: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+  /* Add your navbar styles here */
+}
+
+/* ===== Content Area ===== */
+.main-content {
+  flex: 1;
+  margin-top: 60px; /* Adjust based on navbar height */
+  padding: 2rem;
+  width: 100%;
+}
+
+/* ===== Theme Variables ===== */
+:root {
+  --bg-color: #121212; /* Dark theme default */
+  --text-primary: #ffffff;
+  --accent-color: #646cff;
+}
+
+[data-theme='light'] {
+  --bg-color: #ffffff;
+  --text-primary: #333333;
+}
+
+/* ===== Animation Cleanup ===== */
+.logo {
+  height: 6em;
+  padding: 1.5em;
+  will-change: filter;
+  transition: filter 300ms;
+}
+
+.logo:hover {
+  filter: drop-shadow(0 0 2em var(--accent-color));
+}
+
+/* Remove animation classes if not needed */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ===== Utility Classes ===== */
+.full-bleed {
+  width: 100vw;
+  margin-left: 50%;
+  transform: translateX(-50%);
+}
+
+/* ===== Responsive Fixes ===== */
+@media (max-width: 768px) {
+  body {
+    padding: 0;
+  }
+  
+  .main-content {
+    padding: 1rem;
+  }
+}
