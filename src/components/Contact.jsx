@@ -123,7 +123,7 @@ const Contact = () => {
               <a href="https://wa.me/8088895784" target="_blank" rel="noopener noreferrer">
                 <FaWhatsapp /> WhatsApp
               </a>
-              <a href="https://www.instagram.com/not_nihal?igsh=MTc3aWl0ZXQwMmQ2aw==" target="_blank" rel="noopener noreferrer">
+              <a href="https://www.instagram.com/not_nihal_?igsh=MTc3aWl0ZXQwMmQ2aw==" target="_blank" rel="noopener noreferrer">
                 <FaInstagram /> Instagram
               </a>
             </div>
