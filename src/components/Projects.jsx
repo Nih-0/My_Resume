@@ -4,6 +4,20 @@ import '../styles/Projects.css';
 
 const Projects = () => {
   const projects = [
+     {
+      title: 'InsightIQ – AI Interview Analyzer',
+      description: 'InsightIQ is a full stack AI-powered interview analyzer that evaluates user answers through both text and audio. It provides feedback on communication and technical skills using OpenAI/Gemini APIs and Google Cloud Speech-to-Text. The backend is built with Spring Boot and integrated with a React frontend.',
+      technologies: ['Java', 'Spring Boot', 'Spring AI', 'MySQL', 'OpenAI', 'React', 'Tailwind CSS', 'Google Cloud'],
+      githubUrl: 'https://github.com/Nih-0/InsightIQ_Backend',
+      imageUrl: '/assets/insightiq.png'
+    },
+     {
+      title: 'Ticket Trade – Full Stack App',
+      description: 'Ticket Trade is a full stack ticketing platform allowing users to buy, list, and exchange tickets for trains, buses, events, and movies. It features category-specific ticket forms, JWT-based authentication, image uploads, email reporting via EmailJS, and role-based access using Spring Security.',
+      technologies: ['React', 'Tailwind CSS', 'Java', 'Spring Boot', 'Spring Security', 'MySQL', 'JWT'],
+      githubUrl: 'https://github.com/Nih-0/Ticket_Trade',
+      imageUrl: '/assets/tickettrade.png'
+    },
     {
       title: 'CVXPERT',
       description: 'CVXpert is a Java Servlet-based application that automates resume analysis by extracting technical skills using NLP and calculating their percentage distribution. It includes user authentication, a user-friendly frontend, and secure session management. The tool helps recruiters streamline the recruitment process by quickly identifying top candidates based on skill analysis.',
@@ -12,20 +26,21 @@ const Projects = () => {
       imageUrl: '/assets/cvxpert.png'
     },
     {
-        title: 'E-Commerce Backend',
-        description: 'E-Commerce Backend is a scalable Spring Boot REST API that handles core functionalities for an online shopping platform, including product CRUD operations, multipart image uploads, and keyword-based product search. It is designed for seamless integration with frontend or mobile applications and supports secure, efficient product management',
-        technologies: ['Java', 'Spring Boot', 'RESTful API', 'Spring Data JPA', 'Maven'],
-        githubUrl: 'https://github.com/Nih-0/E_Commerce_Backend',
-        imageUrl: '/assets/ecommerce.png'
-      },
+      title: 'E-Commerce Backend',
+      description: 'E-Commerce Backend is a scalable Spring Boot REST API that handles core functionalities for an online shopping platform, including product CRUD operations, multipart image uploads, and keyword-based product search. It is designed for seamless integration with frontend or mobile applications and supports secure, efficient product management.',
+      technologies: ['Java', 'Spring Boot', 'RESTful API', 'Spring Data JPA', 'Maven'],
+      githubUrl: 'https://github.com/Nih-0/E_Commerce_Backend',
+      imageUrl: '/assets/ecommerce.png'
+    },
     {
       title: 'Backend Security System',
-        description: 'This project is a backend application focused on user authentication and security. It leverages Spring Boot and Spring Security to handle user registration and login with encrypted passwords stored in a MySQL database. The application implements JWT (JSON Web Token) for token-based authentication, ensuring secure access to APIs. It supports CRUD operations on protected endpoints and uses BCrypt for password encoding. The project also includes robust exception handling and response management for a secure and efficient user authentication process.',
-      technologies: ['Java', 'Spring Boot', 'Spring Security', 'JWT (JSON Web Token)', 'BCrypt',  'MySQL', 'Maven'],
+      description: 'This project is a backend application focused on user authentication and security. It leverages Spring Boot and Spring Security to handle user registration and login with encrypted passwords stored in a MySQL database. The application implements JWT for token-based authentication and includes robust exception handling and response management.',
+      technologies: ['Java', 'Spring Boot', 'Spring Security', 'JWT', 'BCrypt', 'MySQL', 'Maven'],
       githubUrl: 'https://github.com/Nih-0/Backend_security',
       imageUrl: '/assets/security.png'
     }
-    
+   
+   
   ];
 
   return (
