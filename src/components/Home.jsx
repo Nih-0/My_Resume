@@ -49,7 +49,7 @@ const Home = () => {
           transition={{ delay: 1.5, duration: 1 }}
         >
            <Link to="/contact" className="btn primary">Contact Me</Link>
-          <a href="/assets/Resume.pdf" download className="btn secondary">Download Resume</a>
+          <a href="/assets/Resume1.pdf" download className="btn secondary">Download Resume</a>
         </motion.div>
       </div>
     </motion.div>
