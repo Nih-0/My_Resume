@@ -1,6 +1,10 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 32" width="64" height="32">
-  <rect width="64" height="32" rx="6" fill="#070709"/>
-  <text x="6" y="24" font-family="'Space Mono', 'Arial Black', sans-serif" font-weight="900" font-size="24" fill="#FFFFFF" letter-spacing="-1">N</text>
-  <rect x="25" y="19" width="6" height="5" rx="1" fill="#00ff88"/>
-  <text x="34" y="24" font-family="'Space Mono', 'Arial Black', sans-serif" font-weight="900" font-size="24" fill="#FFFFFF" letter-spacing="-1">Y</text>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <rect width="64" height="64" rx="14" fill="#0a0a0f"/>
+  <rect x="1" y="1" width="62" height="62" rx="13" fill="none" stroke="#00ff88" stroke-width="2" stroke-opacity="0.5"/>
+  <!-- N -->
+  <path d="M 7 14 L 14.5 14 L 22 32 L 22 14 L 28 14 L 28 50 L 20.5 50 L 13 32 L 13 50 L 7 50 Z" fill="#FFFFFF"/>
+  <!-- Neon Dot . -->
+  <rect x="25.5" y="41" width="8.5" height="8.5" rx="2" fill="#00ff88"/>
+  <!-- Y -->
+  <path d="M 32 14 L 40.5 29 L 40.5 50 L 47.5 50 L 47.5 29 L 57 14 L 49.5 14 L 44 24 L 38.5 14 Z" fill="#FFFFFF"/>
 </svg>
