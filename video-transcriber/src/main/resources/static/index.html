@@ -1,0 +1,881 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video Transcriber AI | Multi-Language FFmpeg Suite</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f0fdfa',
+                            100: '#ccfbf1',
+                            400: '#2dd4bf',
+                            500: '#14b8a6',
+                            600: '#0d9488',
+                            700: '#0f766e',
+                            800: '#115e59',
+                            900: '#134e4a',
+                        },
+                        accent: {
+                            purple: '#8b5cf6',
+                            blue: '#3b82f6',
+                            amber: '#f59e0b',
+                            emerald: '#10b981'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'Inter', 'system-ui', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: radial-gradient(circle at 50% 0%, #1a2234 0%, #0b0f19 100%);
+            min-height: 100vh;
+        }
+        .glass-panel {
+            background: rgba(18, 24, 38, 0.75);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .glass-card {
+            background: rgba(26, 34, 52, 0.6);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .glass-card:hover {
+            border-color: rgba(20, 184, 166, 0.3);
+        }
+        .active-segment {
+            background: rgba(20, 184, 166, 0.15) !important;
+            border-left: 3px solid #14b8a6 !important;
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: rgba(15, 23, 42, 0.6);
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: rgba(100, 116, 139, 0.4);
+            border-radius: 9999px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: rgba(148, 163, 184, 0.6);
+        }
+        .glow-effect {
+            box-shadow: 0 0 25px -5px rgba(20, 184, 166, 0.3);
+        }
+    </style>
+</head>
+<body class="text-slate-100 antialiased custom-scrollbar">
+
+    <!-- Header / Navigation -->
+    <header class="sticky top-0 z-40 border-b border-slate-800/80 bg-slate-950/80 backdrop-blur-xl">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-600 to-teal-400 flex items-center justify-center shadow-lg shadow-teal-500/20">
+                    <i data-lucide="waveform" class="w-5 h-5 text-slate-950 stroke-[2.5]"></i>
+                </div>
+                <div>
+                    <span class="font-bold text-lg bg-gradient-to-r from-teal-300 via-teal-100 to-cyan-400 bg-clip-text text-transparent">AudioVision Pro</span>
+                    <span class="text-xs ml-2 px-2 py-0.5 rounded-full bg-teal-500/10 text-teal-400 border border-teal-500/20 font-medium">FFmpeg + AI Whisper</span>
+                </div>
+            </div>
+
+            <!-- Status Badges -->
+            <div class="flex items-center space-x-3 text-xs">
+                <div id="ffmpegBadge" class="flex items-center space-x-2 px-3 py-1.5 rounded-full bg-slate-800/80 border border-slate-700/60 text-slate-300">
+                    <span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse" id="ffmpegDot"></span>
+                    <span id="ffmpegText">Checking FFmpeg...</span>
+                </div>
+                <div id="whisperBadge" class="hidden sm:flex items-center space-x-2 px-3 py-1.5 rounded-full bg-slate-800/80 border border-slate-700/60 text-slate-300">
+                    <span class="w-2 h-2 rounded-full bg-emerald-400" id="whisperDot"></span>
+                    <span id="whisperText">Faster-Whisper Ready</span>
+                </div>
+                <button onclick="toggleSettingsModal()" class="p-2 rounded-lg bg-slate-800/60 hover:bg-slate-700 text-slate-400 hover:text-white transition" title="Settings / Path Config">
+                    <i data-lucide="settings" class="w-4 h-4"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+
+        <!-- Hero Section -->
+        <section class="text-center max-w-3xl mx-auto space-y-3">
+            <h1 class="text-3xl sm:text-4xl font-extrabold tracking-tight text-white">
+                Multilingual Video & Audio <span class="bg-gradient-to-r from-teal-400 via-cyan-300 to-blue-500 bg-clip-text text-transparent">Transcriber</span>
+            </h1>
+            <p class="text-slate-400 text-sm sm:text-base leading-relaxed">
+                Extract audio tracks with <span class="text-teal-300 font-medium">FFmpeg</span> and generate timestamps for <span class="text-white font-medium">English</span>, <span class="text-white font-medium">Hindi (हिन्दी)</span>, and <span class="text-white font-medium">Tamil (தமிழ்)</span> audio streams.
+            </p>
+        </section>
+
+        <!-- Upload & Options Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+
+            <!-- Left Panel: Uploader & Media Config -->
+            <div class="lg:col-span-5 space-y-6">
+
+                <!-- Drag & Drop Card -->
+                <div class="glass-panel rounded-2xl p-6 border border-slate-800 shadow-xl relative overflow-hidden">
+                    <h2 class="text-sm font-semibold uppercase tracking-wider text-slate-400 mb-4 flex items-center space-x-2">
+                        <i data-lucide="upload-cloud" class="w-4 h-4 text-teal-400"></i>
+                        <span>1. Upload Media File</span>
+                    </h2>
+
+                    <div id="dropZone" 
+                         class="border-2 border-dashed border-slate-700 hover:border-teal-500/60 rounded-xl p-8 text-center cursor-pointer transition-all duration-300 bg-slate-900/40 hover:bg-teal-950/20 group relative">
+                        <input type="file" id="fileInput" accept="video/*,audio/*,.mkv,.mp4,.mov,.avi,.webm,.mp3,.wav,.m4a" class="hidden">
+                        
+                        <div class="space-y-4">
+                            <div class="w-16 h-16 mx-auto rounded-2xl bg-teal-500/10 flex items-center justify-center text-teal-400 group-hover:scale-110 transition-transform">
+                                <i data-lucide="file-video" class="w-8 h-8"></i>
+                            </div>
+                            <div>
+                                <p class="text-sm font-medium text-slate-200">
+                                    <span class="text-teal-400 hover:underline">Click to browse</span> or drag & drop video
+                                </p>
+                                <p class="text-xs text-slate-500 mt-1">MP4, MKV (Multi-track), MOV, WebM, MP3, WAV</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Upload Progress -->
+                    <div id="uploadProgressContainer" class="hidden mt-4 space-y-2">
+                        <div class="flex justify-between text-xs text-slate-400">
+                            <span id="uploadStatusText">Probing streams with FFprobe...</span>
+                            <span id="uploadPercent">0%</span>
+                        </div>
+                        <div class="w-full h-2 bg-slate-800 rounded-full overflow-hidden">
+                            <div id="uploadProgressBar" class="h-full bg-gradient-to-r from-teal-500 to-cyan-400 rounded-full w-0 transition-all duration-300"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Media Details & Audio Tracks Inspector -->
+                <div id="mediaDetailsPanel" class="hidden glass-panel rounded-2xl p-6 border border-slate-800 shadow-xl space-y-5">
+                    <div class="flex items-center justify-between border-b border-slate-800/80 pb-3">
+                        <h2 class="text-sm font-semibold uppercase tracking-wider text-slate-400 flex items-center space-x-2">
+                            <i data-lucide="layers" class="w-4 h-4 text-teal-400"></i>
+                            <span>2. Audio Tracks & Streams</span>
+                        </h2>
+                        <span id="mediaDurationBadge" class="text-xs px-2.5 py-1 rounded bg-slate-800 text-slate-300 font-mono">00:00</span>
+                    </div>
+
+                    <div class="space-y-3">
+                        <div class="text-xs text-slate-400">
+                            <span class="font-medium text-slate-200" id="mediaFileName">video.mp4</span>
+                            <span class="ml-2 text-slate-500" id="mediaResolution">1080p</span>
+                        </div>
+
+                        <!-- Audio Tracks List -->
+                        <div id="audioTracksList" class="space-y-2">
+                            <!-- Populated dynamically -->
+                        </div>
+                    </div>
+
+                    <!-- Transcription Config -->
+                    <div class="border-t border-slate-800/80 pt-4 space-y-4">
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-300 mb-2">Target Spoken Language</label>
+                            <div class="grid grid-cols-2 gap-2">
+                                <button type="button" onclick="selectLanguage('en')" class="lang-btn p-2.5 rounded-lg text-xs font-medium border border-teal-500/50 bg-teal-950/40 text-teal-300 text-left flex items-center space-x-2" data-lang="en">
+                                    <span>🇬🇧</span>
+                                    <span>English (en)</span>
+                                </button>
+                                <button type="button" onclick="selectLanguage('hi')" class="lang-btn p-2.5 rounded-lg text-xs font-medium border border-slate-700 bg-slate-800/60 text-slate-300 text-left flex items-center space-x-2 hover:border-slate-600" data-lang="hi">
+                                    <span>🇮🇳</span>
+                                    <span>Hindi (हिन्दी)</span>
+                                </button>
+                                <button type="button" onclick="selectLanguage('ta')" class="lang-btn p-2.5 rounded-lg text-xs font-medium border border-slate-700 bg-slate-800/60 text-slate-300 text-left flex items-center space-x-2 hover:border-slate-600" data-lang="ta">
+                                    <span>🇮🇳</span>
+                                    <span>Tamil (தமிழ்)</span>
+                                </button>
+                                <button type="button" onclick="selectLanguage('auto')" class="lang-btn p-2.5 rounded-lg text-xs font-medium border border-slate-700 bg-slate-800/60 text-slate-300 text-left flex items-center space-x-2 hover:border-slate-600" data-lang="auto">
+                                    <span>🌐</span>
+                                    <span>Auto-Detect</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-3">
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-300 mb-1">Whisper Model</label>
+                                <select id="modelSelect" class="w-full px-3 py-2 bg-slate-900 border border-slate-700 rounded-lg text-xs text-slate-200 focus:outline-none focus:border-teal-500">
+                                    <option value="medium" selected>Medium (Recommended for Tamil/Hindi)</option>
+                                    <option value="small">Small (Fast)</option>
+                                    <option value="base">Base (Lightweight)</option>
+                                    <option value="tiny">Tiny (Quick)</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-300 mb-1">Device Engine</label>
+                                <select id="deviceSelect" class="w-full px-3 py-2 bg-slate-900 border border-slate-700 rounded-lg text-xs text-slate-200 focus:outline-none focus:border-teal-500">
+                                    <option value="cpu" selected>CPU (CTranslate2 int8)</option>
+                                    <option value="cuda">NVIDIA GPU (CUDA)</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-300 mb-1">Context Prompt (Optional)</label>
+                            <input type="text" id="contextPromptInput" placeholder="e.g. SIP, Mutual Funds, Asset Allocation, Wealth With Kaushik" class="w-full px-3 py-2 bg-slate-900 border border-slate-700 rounded-lg text-xs text-slate-200 placeholder-slate-500 focus:outline-none focus:border-teal-500">
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="space-y-2 pt-2">
+                            <button id="btnTranscribeSelected" onclick="startTranscription(false)" class="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-teal-500 to-teal-600 hover:from-teal-400 hover:to-teal-500 text-slate-950 font-bold text-sm shadow-lg shadow-teal-500/25 flex items-center justify-center space-x-2 transition transform active:scale-98">
+                                <i data-lucide="play" class="w-4 h-4 fill-current"></i>
+                                <span>Transcribe Selected Track</span>
+                            </button>
+                            <button id="btnTranscribeAll" onclick="startTranscription(true)" class="w-full py-2.5 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold text-xs border border-slate-700 flex items-center justify-center space-x-2 transition">
+                                <i data-lucide="sparkles" class="w-3.5 h-3.5 text-amber-400"></i>
+                                <span>Transcribe All Tracks (Eng + Hindi + Tamil)</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Right Panel: Video Player & Interactive Transcripts -->
+            <div class="lg:col-span-7 space-y-6">
+
+                <!-- Video Player Card -->
+                <div id="videoContainerCard" class="hidden glass-panel rounded-2xl p-6 border border-slate-800 shadow-xl space-y-4">
+                    <div class="flex items-center justify-between">
+                        <h2 class="text-sm font-semibold uppercase tracking-wider text-slate-400 flex items-center space-x-2">
+                            <i data-lucide="tv" class="w-4 h-4 text-teal-400"></i>
+                            <span>Synchronized Video Player</span>
+                        </h2>
+                        <span id="videoCurrentTime" class="text-xs font-mono text-teal-400">00:00.000</span>
+                    </div>
+
+                    <div class="relative rounded-xl overflow-hidden bg-black aspect-video border border-slate-800">
+                        <video id="mainVideoPlayer" controls class="w-full h-full object-contain">
+                            Your browser does not support the video element.
+                        </video>
+                    </div>
+
+                    <!-- Audio Player for Isolated Tracks (hidden by default unless played) -->
+                    <div id="isolatedAudioPlayerBox" class="hidden p-3 rounded-xl bg-slate-900/80 border border-slate-800 space-y-1">
+                        <div class="flex justify-between text-xs text-slate-400">
+                            <span id="isolatedAudioLabel">Isolated Track Audio</span>
+                            <button onclick="hideIsolatedAudio()" class="text-slate-500 hover:text-slate-300"><i data-lucide="x" class="w-3.5 h-3.5"></i></button>
+                        </div>
+                        <audio id="isolatedAudioPlayer" controls class="w-full h-8"></audio>
+                    </div>
+                </div>
+
+                <!-- Transcript Output Card -->
+                <div class="glass-panel rounded-2xl p-6 border border-slate-800 shadow-xl space-y-5">
+                    <div class="flex flex-wrap items-center justify-between gap-3 border-b border-slate-800/80 pb-4">
+                        <div class="flex items-center space-x-2">
+                            <i data-lucide="file-text" class="w-4 h-4 text-teal-400"></i>
+                            <h2 class="text-sm font-semibold uppercase tracking-wider text-slate-400">3. Generated Transcript</h2>
+                        </div>
+
+                        <!-- Language / Track Tabs (if multi-track) -->
+                        <div id="transcriptTabs" class="flex items-center space-x-1 bg-slate-900/80 p-1 rounded-lg border border-slate-800 text-xs">
+                            <button class="px-3 py-1 rounded-md bg-teal-500 text-slate-950 font-bold" id="defaultTab">Track 1</button>
+                        </div>
+                    </div>
+
+                    <!-- Controls: Search & Exports -->
+                    <div id="transcriptControls" class="hidden flex flex-wrap items-center justify-between gap-3">
+                        <div class="relative flex-1 min-w-[200px]">
+                            <i data-lucide="search" class="w-4 h-4 absolute left-3 top-2.5 text-slate-500"></i>
+                            <input type="text" id="transcriptSearch" oninput="filterTranscript()" placeholder="Search in spoken words..." class="w-full pl-9 pr-3 py-2 bg-slate-900 border border-slate-700/80 rounded-lg text-xs text-slate-200 placeholder-slate-500 focus:outline-none focus:border-teal-500">
+                        </div>
+
+                        <div class="flex items-center space-x-2">
+                            <button onclick="exportFormat('srt')" class="px-2.5 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs text-slate-200 border border-slate-700 flex items-center space-x-1.5 transition" title="SubRip Subtitle format">
+                                <i data-lucide="download" class="w-3.5 h-3.5 text-teal-400"></i>
+                                <span>.SRT</span>
+                            </button>
+                            <button onclick="exportFormat('vtt')" class="px-2.5 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs text-slate-200 border border-slate-700 flex items-center space-x-1.5 transition" title="Web Video Text Tracks">
+                                <i data-lucide="download" class="w-3.5 h-3.5 text-cyan-400"></i>
+                                <span>.VTT</span>
+                            </button>
+                            <button onclick="exportFormat('txt')" class="px-2.5 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs text-slate-200 border border-slate-700 flex items-center space-x-1.5 transition" title="Plain text">
+                                <i data-lucide="download" class="w-3.5 h-3.5 text-slate-400"></i>
+                                <span>.TXT</span>
+                            </button>
+                            <button onclick="copyFullTranscript()" class="px-2.5 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs text-slate-200 border border-slate-700 flex items-center space-x-1.5 transition" title="Copy to clipboard">
+                                <i data-lucide="copy" class="w-3.5 h-3.5 text-slate-400"></i>
+                                <span id="copyBtnText">Copy</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Transcript Loading State -->
+                    <div id="transcribingState" class="hidden py-16 text-center space-y-4">
+                        <div class="w-12 h-12 mx-auto border-4 border-teal-500/20 border-t-teal-400 rounded-full animate-spin"></div>
+                        <div>
+                            <p class="text-sm font-semibold text-slate-200" id="transcribingStateText">Processing Audio with FFmpeg & Whisper...</p>
+                            <p class="text-xs text-slate-500 mt-1">Extracting 16kHz audio stream & transcribing timestamps</p>
+                        </div>
+                    </div>
+
+                    <!-- Transcript Empty State -->
+                    <div id="transcriptEmptyState" class="py-16 text-center text-slate-500 space-y-3">
+                        <i data-lucide="message-square-dashed" class="w-10 h-10 mx-auto text-slate-600"></i>
+                        <p class="text-xs">Upload a video to see multi-track audio streams & transcribe them.</p>
+                    </div>
+
+                    <!-- Segments List -->
+                    <div id="transcriptSegmentsContainer" class="hidden max-h-[480px] overflow-y-auto space-y-2 pr-1 custom-scrollbar">
+                        <!-- Populated dynamically -->
+                    </div>
+
+                    <!-- Full Text Accordion / View -->
+                    <div id="fullTextContainer" class="hidden p-4 rounded-xl bg-slate-900/60 border border-slate-800 text-xs text-slate-300 leading-relaxed max-h-36 overflow-y-auto custom-scrollbar">
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </main>
+
+    <!-- Settings Modal -->
+    <div id="settingsModal" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm hidden flex items-center justify-center p-4">
+        <div class="glass-panel rounded-2xl max-w-lg w-full p-6 border border-slate-700 shadow-2xl space-y-5">
+            <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                <h3 class="text-base font-bold text-white flex items-center space-x-2">
+                    <i data-lucide="sliders" class="w-4 h-4 text-teal-400"></i>
+                    <span>FFmpeg & System Settings</span>
+                </h3>
+                <button onclick="toggleSettingsModal()" class="text-slate-400 hover:text-white"><i data-lucide="x" class="w-5 h-5"></i></button>
+            </div>
+
+            <div class="space-y-4 text-xs">
+                <div>
+                    <label class="block text-slate-300 font-medium mb-1">FFmpeg Binary Path</label>
+                    <input type="text" id="configFfmpegPath" class="w-full px-3 py-2 bg-slate-900 border border-slate-700 rounded-lg text-slate-200 font-mono text-xs focus:outline-none focus:border-teal-500" placeholder="C:/Users/Nihal/Downloads/ffmpeg-9.0.2/bin/ffmpeg.exe">
+                </div>
+
+                <div>
+                    <label class="block text-slate-300 font-medium mb-1">FFprobe Binary Path</label>
+                    <input type="text" id="configFfprobePath" class="w-full px-3 py-2 bg-slate-900 border border-slate-700 rounded-lg text-slate-200 font-mono text-xs focus:outline-none focus:border-teal-500" placeholder="C:/Users/Nihal/Downloads/ffmpeg-9.0.2/bin/ffprobe.exe">
+                </div>
+
+                <div>
+                    <label class="block text-slate-300 font-medium mb-1">OpenAI API Key (Optional)</label>
+                    <input type="password" id="configApiKey" class="w-full px-3 py-2 bg-slate-900 border border-slate-700 rounded-lg text-slate-200 text-xs focus:outline-none focus:border-teal-500" placeholder="sk-...">
+                    <p class="text-slate-500 text-[10px] mt-1">Leave empty to use 100% free local Faster-Whisper AI</p>
+                </div>
+            </div>
+
+            <div class="flex justify-end space-x-3 pt-2">
+                <button onclick="toggleSettingsModal()" class="px-4 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs font-semibold text-slate-300">Cancel</button>
+                <button onclick="saveSettings()" class="px-4 py-2 rounded-lg bg-teal-500 hover:bg-teal-400 text-slate-950 font-bold text-xs">Save Configuration</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Frontend App Logic -->
+    <script>
+        let currentMetadata = null;
+        let currentSelectedLanguage = 'en';
+        let currentSelectedStreamIndex = null;
+        let allTranscripts = [];
+        let activeTranscriptIndex = 0;
+
+        // Initialize Lucide icons
+        document.addEventListener('DOMContentLoaded', () => {
+            lucide.createIcons();
+            checkSystemStatus();
+            setupDropZone();
+            setupVideoSync();
+        });
+
+        async function checkSystemStatus() {
+            try {
+                const res = await fetch('/api/system/status');
+                const data = await res.json();
+                
+                const dot = document.getElementById('ffmpegDot');
+                const text = document.getElementById('ffmpegText');
+                
+                if (data.ffmpegReady) {
+                    dot.className = 'w-2 h-2 rounded-full bg-emerald-400';
+                    text.innerText = 'FFmpeg Ready';
+                    document.getElementById('configFfmpegPath').value = data.ffmpegPath || '';
+                    document.getElementById('configFfprobePath').value = data.ffprobePath || '';
+                } else {
+                    dot.className = 'w-2 h-2 rounded-full bg-red-400';
+                    text.innerText = 'FFmpeg Not Found';
+                }
+
+                if (data.fasterWhisperReady) {
+                    document.getElementById('whisperDot').className = 'w-2 h-2 rounded-full bg-emerald-400';
+                    document.getElementById('whisperText').innerText = 'Whisper AI Engine Ready';
+                }
+            } catch (err) {
+                console.error("System check error", err);
+            }
+        }
+
+        function setupDropZone() {
+            const dropZone = document.getElementById('dropZone');
+            const fileInput = document.getElementById('fileInput');
+
+            dropZone.addEventListener('click', () => fileInput.click());
+
+            dropZone.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                dropZone.classList.add('border-teal-500', 'bg-teal-950/30');
+            });
+
+            dropZone.addEventListener('dragleave', () => {
+                dropZone.classList.remove('border-teal-500', 'bg-teal-950/30');
+            });
+
+            dropZone.addEventListener('drop', (e) => {
+                e.preventDefault();
+                dropZone.classList.remove('border-teal-500', 'bg-teal-950/30');
+                if (e.dataTransfer.files.length > 0) {
+                    handleFileUpload(e.dataTransfer.files[0]);
+                }
+            });
+
+            fileInput.addEventListener('change', (e) => {
+                if (e.target.files.length > 0) {
+                    handleFileUpload(e.target.files[0]);
+                }
+            });
+        }
+
+        async function handleFileUpload(file) {
+            const formData = new FormData();
+            formData.append('file', file);
+
+            const progressContainer = document.getElementById('uploadProgressContainer');
+            const progressBar = document.getElementById('uploadProgressBar');
+            const uploadPercent = document.getElementById('uploadPercent');
+            const uploadStatusText = document.getElementById('uploadStatusText');
+
+            progressContainer.classList.remove('hidden');
+            progressBar.style.width = '20%';
+            uploadPercent.innerText = '20%';
+            uploadStatusText.innerText = 'Uploading video file...';
+
+            try {
+                // Use XMLHttpRequest for live upload progress
+                const xhr = new XMLHttpRequest();
+                xhr.open('POST', '/api/media/upload', true);
+
+                xhr.upload.onprogress = (e) => {
+                    if (e.lengthComputable) {
+                        const pct = Math.round((e.loaded / e.total) * 90);
+                        progressBar.style.width = `${pct}%`;
+                        uploadPercent.innerText = `${pct}%`;
+                        if (pct >= 90) {
+                            uploadStatusText.innerText = 'Probing audio/video tracks with FFprobe...';
+                        }
+                    }
+                };
+
+                xhr.onload = () => {
+                    if (xhr.status === 200) {
+                        progressBar.style.width = '100%';
+                        uploadPercent.innerText = '100%';
+                        uploadStatusText.innerText = 'Streams probed successfully!';
+                        
+                        setTimeout(() => progressContainer.classList.add('hidden'), 1000);
+                        
+                        const metadata = JSON.parse(xhr.responseText);
+                        renderMediaMetadata(metadata);
+                    } else {
+                        alert('Upload failed: ' + xhr.responseText);
+                        progressContainer.classList.add('hidden');
+                    }
+                };
+
+                xhr.onerror = () => {
+                    alert('Network error during upload');
+                    progressContainer.classList.add('hidden');
+                };
+
+                xhr.send(formData);
+
+            } catch (err) {
+                console.error(err);
+                progressContainer.classList.add('hidden');
+            }
+        }
+
+        function renderMediaMetadata(metadata) {
+            currentMetadata = metadata;
+            document.getElementById('mediaDetailsPanel').classList.remove('hidden');
+            document.getElementById('videoContainerCard').classList.remove('hidden');
+
+            document.getElementById('mediaFileName').innerText = metadata.fileName;
+            document.getElementById('mediaDurationBadge').innerText = metadata.formattedDuration || '00:00';
+            document.getElementById('mediaResolution').innerText = metadata.width ? `${metadata.width}x${metadata.height} (${metadata.videoCodec})` : 'Audio Stream';
+
+            // Set Video Player Source
+            const videoPlayer = document.getElementById('mainVideoPlayer');
+            videoPlayer.src = metadata.streamUrl;
+            videoPlayer.load();
+
+            // Render Audio Tracks
+            const audioTracksList = document.getElementById('audioTracksList');
+            audioTracksList.innerHTML = '';
+
+            if (!metadata.audioStreams || metadata.audioStreams.length === 0) {
+                audioTracksList.innerHTML = '<div class="p-3 bg-slate-900/60 rounded-lg text-xs text-slate-400">Single audio channel detected</div>';
+                currentSelectedStreamIndex = null;
+            } else {
+                metadata.audioStreams.forEach((track, idx) => {
+                    const isFirst = idx === 0;
+                    if (isFirst && currentSelectedStreamIndex === null) {
+                        currentSelectedStreamIndex = track.index;
+                    }
+
+                    const trackDiv = document.createElement('div');
+                    trackDiv.className = `p-3 rounded-xl border transition cursor-pointer flex items-center justify-between ${
+                        currentSelectedStreamIndex === track.index
+                            ? 'border-teal-500 bg-teal-950/20'
+                            : 'border-slate-800 bg-slate-900/50 hover:border-slate-700'
+                    }`;
+                    trackDiv.onclick = () => selectTrack(track.index);
+
+                    // Flag or Language label
+                    let langFlag = '🎵';
+                    if (track.language.includes('en')) langFlag = '🇬🇧';
+                    else if (track.language.includes('hi')) langFlag = '🇮🇳';
+                    else if (track.language.includes('ta')) langFlag = '🇮🇳';
+
+                    trackDiv.innerHTML = `
+                        <div class="flex items-center space-x-3">
+                            <span class="text-base">${langFlag}</span>
+                            <div>
+                                <div class="text-xs font-semibold text-slate-200">${track.title}</div>
+                                <div class="text-[11px] text-slate-400 font-mono">${track.languageLabel} • ${track.codecName.toUpperCase()} • ${track.channels}ch • ${track.sampleRate}Hz</div>
+                            </div>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <button onclick="event.stopPropagation(); playAudioTrack(${track.index}, '${track.title}')" class="p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-teal-400 text-xs" title="Listen to isolated track">
+                                <i data-lucide="volume-2" class="w-3.5 h-3.5"></i>
+                            </button>
+                            <input type="radio" name="selectedAudioTrack" ${currentSelectedStreamIndex === track.index ? 'checked' : ''} class="accent-teal-500">
+                        </div>
+                    `;
+                    audioTracksList.appendChild(trackDiv);
+                });
+            }
+
+            lucide.createIcons();
+        }
+
+        function selectTrack(index) {
+            currentSelectedStreamIndex = index;
+            renderMediaMetadata(currentMetadata);
+        }
+
+        function selectLanguage(lang) {
+            currentSelectedLanguage = lang;
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                if (btn.dataset.lang === lang) {
+                    btn.className = 'lang-btn p-2.5 rounded-lg text-xs font-medium border border-teal-500/50 bg-teal-950/40 text-teal-300 text-left flex items-center space-x-2';
+                } else {
+                    btn.className = 'lang-btn p-2.5 rounded-lg text-xs font-medium border border-slate-700 bg-slate-800/60 text-slate-300 text-left flex items-center space-x-2 hover:border-slate-600';
+                }
+            });
+        }
+
+        function playAudioTrack(streamIndex, title) {
+            if (!currentMetadata) return;
+            const audioBox = document.getElementById('isolatedAudioPlayerBox');
+            const audioPlayer = document.getElementById('isolatedAudioPlayer');
+            const label = document.getElementById('isolatedAudioLabel');
+
+            label.innerText = `Isolated: ${title}`;
+            audioBox.classList.remove('hidden');
+            audioPlayer.src = `/api/media/audio/${currentMetadata.fileId}/${streamIndex}`;
+            audioPlayer.play();
+            lucide.createIcons();
+        }
+
+        function hideIsolatedAudio() {
+            const audioBox = document.getElementById('isolatedAudioPlayerBox');
+            const audioPlayer = document.getElementById('isolatedAudioPlayer');
+            audioPlayer.pause();
+            audioBox.classList.add('hidden');
+        }
+
+        async function startTranscription(isBatchAll) {
+            if (!currentMetadata) {
+                alert('Please upload a media file first');
+                return;
+            }
+
+            const model = document.getElementById('modelSelect').value;
+            const device = document.getElementById('deviceSelect').value;
+            const apiKey = document.getElementById('configApiKey').value;
+            const prompt = document.getElementById('contextPromptInput').value;
+
+            // UI State: Loading
+            document.getElementById('transcriptEmptyState').classList.add('hidden');
+            document.getElementById('transcriptSegmentsContainer').classList.add('hidden');
+            document.getElementById('fullTextContainer').classList.add('hidden');
+            document.getElementById('transcriptControls').classList.add('hidden');
+            document.getElementById('transcribingState').classList.remove('hidden');
+            
+            document.getElementById('transcribingStateText').innerText = isBatchAll 
+                ? 'Extracting & transcribing all tracks (English, Hindi, Tamil) with FFmpeg...' 
+                : `Transcribing track with ${model.toUpperCase()} model (${currentSelectedLanguage.toUpperCase()})...`;
+
+            try {
+                const endpoint = isBatchAll ? '/api/media/transcribe-all' : '/api/media/transcribe';
+                const payload = {
+                    fileId: currentMetadata.fileId,
+                    streamIndex: isBatchAll ? null : currentSelectedStreamIndex,
+                    language: currentSelectedLanguage,
+                    model: model,
+                    device: device,
+                    apiKey: apiKey,
+                    prompt: prompt
+                };
+
+                const res = await fetch(endpoint, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                const data = await res.json();
+
+                document.getElementById('transcribingState').classList.add('hidden');
+
+                if (isBatchAll) {
+                    if (Array.isArray(data)) {
+                        allTranscripts = data;
+                        renderTranscriptTabs();
+                        renderActiveTranscript(0);
+                    } else {
+                        alert('Transcription failed: ' + (data.error || 'Unknown error'));
+                    }
+                } else {
+                    if (data.status === 'SUCCESS') {
+                        allTranscripts = [data];
+                        renderTranscriptTabs();
+                        renderActiveTranscript(0);
+                    } else {
+                        alert('Transcription error: ' + data.error);
+                        document.getElementById('transcriptEmptyState').classList.remove('hidden');
+                    }
+                }
+
+            } catch (err) {
+                console.error(err);
+                document.getElementById('transcribingState').classList.add('hidden');
+                document.getElementById('transcriptEmptyState').classList.remove('hidden');
+                alert('Transcription failed: ' + err.message);
+            }
+        }
+
+        function renderTranscriptTabs() {
+            const tabsContainer = document.getElementById('transcriptTabs');
+            tabsContainer.innerHTML = '';
+
+            if (allTranscripts.length <= 1) {
+                const item = allTranscripts[0] || {};
+                tabsContainer.innerHTML = `<span class="px-3 py-1 rounded bg-teal-500/20 text-teal-300 font-semibold">${item.languageName || 'Transcript'} (${item.processingTimeSeconds || 0}s)</span>`;
+                return;
+            }
+
+            allTranscripts.forEach((t, idx) => {
+                const btn = document.createElement('button');
+                btn.className = `px-3 py-1 rounded-md transition font-medium ${
+                    activeTranscriptIndex === idx
+                        ? 'bg-teal-500 text-slate-950 font-bold'
+                        : 'text-slate-400 hover:text-slate-200'
+                }`;
+                btn.innerText = t.trackTitle || t.languageName || `Track ${idx + 1}`;
+                btn.onclick = () => {
+                    activeTranscriptIndex = idx;
+                    renderTranscriptTabs();
+                    renderActiveTranscript(idx);
+                };
+                tabsContainer.appendChild(btn);
+            });
+        }
+
+        function renderActiveTranscript(idx) {
+            const transcript = allTranscripts[idx];
+            if (!transcript) return;
+
+            document.getElementById('transcriptControls').classList.remove('hidden');
+            document.getElementById('transcriptSegmentsContainer').classList.remove('hidden');
+            document.getElementById('fullTextContainer').classList.remove('hidden');
+
+            // Render Full Text
+            const fullTextContainer = document.getElementById('fullTextContainer');
+            fullTextContainer.innerHTML = `
+                <div class="flex items-center justify-between mb-2 text-slate-400 border-b border-slate-800 pb-1">
+                    <span class="font-bold text-teal-400">Full Text (${transcript.languageName || transcript.language})</span>
+                    <span>Confidence: ${Math.round((transcript.languageProbability || 1) * 100)}%</span>
+                </div>
+                <p>${transcript.fullText || 'No speech detected in this audio track.'}</p>
+            `;
+
+            // Render Segments
+            const segmentsContainer = document.getElementById('transcriptSegmentsContainer');
+            segmentsContainer.innerHTML = '';
+
+            if (!transcript.segments || transcript.segments.length === 0) {
+                segmentsContainer.innerHTML = '<div class="p-6 text-center text-xs text-slate-500">No timestamped segments found.</div>';
+                return;
+            }
+
+            transcript.segments.forEach(seg => {
+                const div = document.createElement('div');
+                div.id = `seg-${seg.id}`;
+                div.className = 'segment-row p-3 rounded-xl glass-card transition cursor-pointer border-l-2 border-transparent hover:border-teal-500/40 flex items-start space-x-3';
+                div.onclick = () => seekTo(seg.start);
+
+                div.innerHTML = `
+                    <button class="px-2 py-1 rounded bg-slate-800/80 hover:bg-teal-500 hover:text-slate-950 text-teal-400 font-mono text-[11px] shrink-0 font-semibold transition" title="Jump to timestamp">
+                        ${formatTime(seg.start)}
+                    </button>
+                    <div class="flex-1 space-y-1">
+                        <p class="text-xs text-slate-200 leading-relaxed font-medium">${seg.text}</p>
+                        <div class="text-[10px] text-slate-500 font-mono">${formatTime(seg.start)} → ${formatTime(seg.end)}</div>
+                    </div>
+                `;
+                segmentsContainer.appendChild(div);
+            });
+
+            lucide.createIcons();
+        }
+
+        function filterTranscript() {
+            const query = document.getElementById('transcriptSearch').value.toLowerCase();
+            const rows = document.querySelectorAll('.segment-row');
+
+            rows.forEach(row => {
+                const text = row.innerText.toLowerCase();
+                if (text.includes(query)) {
+                    row.style.display = 'flex';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        }
+
+        function setupVideoSync() {
+            const video = document.getElementById('mainVideoPlayer');
+            const timeDisplay = document.getElementById('videoCurrentTime');
+
+            video.addEventListener('timeupdate', () => {
+                const curr = video.currentTime;
+                timeDisplay.innerText = formatTimeDetailed(curr);
+
+                // Highlight active segment
+                const transcript = allTranscripts[activeTranscriptIndex];
+                if (!transcript || !transcript.segments) return;
+
+                transcript.segments.forEach(seg => {
+                    const el = document.getElementById(`seg-${seg.id}`);
+                    if (!el) return;
+
+                    if (curr >= seg.start && curr <= seg.end) {
+                        if (!el.classList.contains('active-segment')) {
+                            document.querySelectorAll('.segment-row').forEach(r => r.classList.remove('active-segment'));
+                            el.classList.add('active-segment');
+                            el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                        }
+                    }
+                });
+            });
+        }
+
+        function seekTo(seconds) {
+            const video = document.getElementById('mainVideoPlayer');
+            video.currentTime = seconds;
+            video.play();
+        }
+
+        function formatTime(seconds) {
+            const mins = Math.floor(seconds / 60);
+            const secs = Math.floor(seconds % 60);
+            return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+        }
+
+        function formatTimeDetailed(seconds) {
+            const mins = Math.floor(seconds / 60);
+            const secs = Math.floor(seconds % 60);
+            const millis = Math.floor((seconds % 1) * 1000);
+            return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}.${millis.toString().padStart(3, '0')}`;
+        }
+
+        function exportFormat(format) {
+            const transcript = allTranscripts[activeTranscriptIndex];
+            if (!transcript || !currentMetadata) return;
+
+            const streamIdx = transcript.streamIndex;
+            let url = `/api/media/export/${currentMetadata.fileId}/${format}`;
+            if (streamIdx !== null && streamIdx !== undefined) {
+                url += `?streamIndex=${streamIdx}`;
+            }
+            window.open(url, '_blank');
+        }
+
+        function copyFullTranscript() {
+            const transcript = allTranscripts[activeTranscriptIndex];
+            if (!transcript) return;
+
+            navigator.clipboard.writeText(transcript.fullText || '').then(() => {
+                const btnText = document.getElementById('copyBtnText');
+                btnText.innerText = 'Copied!';
+                setTimeout(() => btnText.innerText = 'Copy', 2000);
+            });
+        }
+
+        function toggleSettingsModal() {
+            const modal = document.getElementById('settingsModal');
+            modal.classList.toggle('hidden');
+        }
+
+        async function saveSettings() {
+            const ffmpeg = document.getElementById('configFfmpegPath').value;
+            const ffprobe = document.getElementById('configFfprobePath').value;
+
+            try {
+                await fetch('/api/system/config', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ ffmpegPath: ffmpeg, ffprobePath: ffprobe })
+                });
+                toggleSettingsModal();
+                checkSystemStatus();
+            } catch (err) {
+                alert('Failed to update config: ' + err.message);
+            }
+        }
+    </script>
+</body>
+</html>

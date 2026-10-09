@@ -1,0 +1,165 @@
+{
+  "profile": {
+    "name": "Nihal Yadav",
+    "role": "Full Stack Developer & Automation Engineer",
+    "location": "Bangalore, Karnataka 🇮🇳",
+    "phone": "+91-8088895784",
+    "bio": "Full Stack Engineer who architected and scaled 360Airo, a production email outreach and marketing platform serving 50+ clients. Experienced in building backend systems, REST/GraphQL APIs, and distributed automation using Spring Boot, Python, SQL and React — with a focus on reliability, deliverability, secure coding, and validation of LLM-generated outputs. Comfortable owning a product from infrastructure design to production scale in agile teams.",
+    "email": "varunbb30@gmail.com",
+    "github": "https://github.com/Nih-0",
+    "linkedin": "https://www.linkedin.com/in/nihal-yadav-/",
+    "leetcode": "https://leetcode.com/u/nihal04_10/",
+    "portfolio": "https://nihalresume.vercel.app",
+    "cvUrl": "https://frvjhjdzwxkqqpagocgy.storage.supabase.co/storage/v1/object/public/portfolio/Nihal_SDE_Updated_1791558881167.pdf",
+    "cvKey": "Nihal_SDE_Updated_1791558881167.pdf",
+    "cvName": "Nihal_SDE_Updated.pdf",
+    "cvUpdatedAt": "2026-10-09T15:14:42.060Z",
+    "photos": []
+  },
+  "projects": [
+    {
+      "num": "PROJECT_01",
+      "title": "360Airo — Production Email Outreach & Marketing Platform",
+      "desc": "Architected from scratch and scaled a multi-tenant email outreach platform serving 50+ clients and handling 100K+ emails/day. Engineered sender pooling, queue-based Celery workers, per-domain rate limiting, and warmup workflows.",
+      "tech": [
+        "Spring Boot",
+        "Python",
+        "Celery",
+        "Redis",
+        "PostgreSQL",
+        "Docker",
+        "AWS EC2/S3",
+        "GraphQL"
+      ],
+      "metric": "✦ 95%+ inbox placement · 100K+ daily emails",
+      "github": "https://github.com/Nih-0",
+      "live": "#"
+    },
+    {
+      "num": "PROJECT_02",
+      "title": "High-Speed URL Scraper",
+      "desc": "High-throughput bulk web scraper ingesting XLSX/CSV sheets of URLs, extracting structured data, and writing formatted results. Built with multithreaded worker pools, proxy/IP rotation, randomized headers, and exponential backoff retry logic.",
+      "tech": [
+        "Python",
+        "Multithreading",
+        "Proxy/IP Rotation",
+        "Pandas",
+        "Requests"
+      ],
+      "metric": "✦ Concurrent multithreading & anti-blocking",
+      "github": "https://github.com/Nih-0",
+      "live": "#"
+    },
+    {
+      "num": "PROJECT_03",
+      "title": "Reddit Sentiment & Competitor Intelligence Analyzer",
+      "desc": "Competitor intelligence platform that discovers and analyzes relevant Reddit discussions for target companies. Automates thread collection with Selenium, stores history in MySQL, and caches searches in Redis to surface brand engagement opportunities.",
+      "tech": [
+        "Spring Boot",
+        "Selenium",
+        "MySQL",
+        "Redis",
+        "Docker",
+        "REST APIs"
+      ],
+      "metric": "✦ Automated thread scraping & competitor sentiment",
+      "github": "https://github.com/Nih-0",
+      "live": "#"
+    },
+    {
+      "num": "PROJECT_04",
+      "title": "SEO Keyword Gap Analyzer",
+      "desc": "Competitor intelligence tool that crawls competitor websites via Selenium, extracts SEO signals, and identifies keyword gaps and organic growth opportunities against target domains. Exposes REST APIs with Redis caching.",
+      "tech": [
+        "Spring Boot",
+        "Selenium",
+        "MySQL",
+        "Redis",
+        "Docker",
+        "REST APIs"
+      ],
+      "metric": "✦ Domain keyword gap detection & SEO analytics",
+      "github": "https://github.com/Nih-0",
+      "live": "#"
+    },
+    {
+      "num": "PROJECT_05",
+      "title": "TechPeek — Technology Stack Detection Chrome Extension",
+      "desc": "Wappalyzer-style Chrome extension identifying frameworks, CMS platforms, analytics tools, and hosting services behind any website using a Spring Boot backend and Selenium-based inspection pipeline with Redis caching.",
+      "tech": [
+        "Spring Boot",
+        "Selenium",
+        "MySQL",
+        "Redis",
+        "Docker",
+        "Chrome Extension"
+      ],
+      "metric": "✦ Instant web stack signature detection",
+      "github": "https://github.com/Nih-0",
+      "live": "#"
+    },
+    {
+      "num": "PROJECT_06",
+      "title": "Beehive — Collaborative Workspace & Developer Platform",
+      "desc": "Collaborative workspace combining project management with real-time communication: live chat over WebSockets plus voice and video inside shared project spaces. Features Spring Boot REST APIs, MySQL persistence, and Redis session caching.",
+      "tech": [
+        "Spring Boot",
+        "WebSockets",
+        "MySQL",
+        "Redis",
+        "Docker",
+        "REST APIs"
+      ],
+      "metric": "✦ Real-time WebSocket communication & sessions",
+      "github": "https://github.com/Nih-0",
+      "live": "#"
+    },
+    {
+      "num": "PROJECT_07",
+      "title": "AI-Powered Social Media Automation Platform",
+      "desc": "Distributed job orchestration system for scheduled publishing across multiple platforms. Integrates LLM APIs for content generation and multimedia processing pipelines with Whisper and FFmpeg.",
+      "tech": [
+        "LLM APIs",
+        "Whisper",
+        "FFmpeg",
+        "Celery",
+        "Redis",
+        "Docker"
+      ],
+      "metric": "✦ 99%+ scheduled execution reliability",
+      "github": "https://github.com/Nih-0",
+      "live": "#"
+    },
+    {
+      "num": "PROJECT_08",
+      "title": "InsightIQ — AI-Powered Interview Analytics Platform",
+      "desc": "Full-stack AI interview evaluation platform with speech-to-text, communication analysis, and technical skill assessment built with Spring Boot, Spring AI, React, MySQL, and JWT authentication.",
+      "tech": [
+        "Spring Boot",
+        "Spring AI",
+        "React",
+        "MySQL",
+        "JWT"
+      ],
+      "metric": "✦ Real-time speech-to-text & skill evaluation",
+      "github": "https://github.com/Nih-0/InsightIQ_Backend",
+      "live": "#"
+    },
+    {
+      "num": "PROJECT_09",
+      "title": "TicketTrade — Secure Ticket Exchange Platform",
+      "desc": "Full-stack secure ticket exchange platform using Spring Boot with JWT authentication, role-based access control, and real-time listing management.",
+      "tech": [
+        "Spring Boot",
+        "JWT",
+        "React",
+        "Tailwind CSS",
+        "MySQL",
+        "RBAC"
+      ],
+      "metric": "✦ Secure authentication & role-based access",
+      "github": "https://github.com/Nih-0",
+      "live": "#"
+    }
+  ]
+}
